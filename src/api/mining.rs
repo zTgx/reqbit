@@ -1,6 +1,6 @@
-use serde_json::Value;
-use async_trait::async_trait;
 use crate::engine::{BitcoinClient, RpcResponse};
+use async_trait::async_trait;
+use serde_json::Value;
 
 use super::{BitcoinCLI, IMining};
 
@@ -9,7 +9,8 @@ impl IMining for BitcoinCLI {
 	async fn get_mining_info(&self) -> Value {
 		let client = BitcoinClient::new();
 
-		let rpc_response = client.send_request::<RpcResponse>("getmininginfo", vec![]).await.unwrap();
+		let rpc_response =
+			client.send_request::<RpcResponse>("getmininginfo", vec![]).await.unwrap();
 
 		rpc_response.result
 	}

@@ -1,5 +1,7 @@
-
-pub use reqbit::{decorator, api::{BitcoinCLI, IMining}};
+pub use reqbit::{
+	api::{BitcoinCLI, IMining},
+	decorator,
+};
 
 #[tokio::main]
 async fn main() {
