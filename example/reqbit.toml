@@ -1,0 +1,3 @@
+bitcoin_node = "bitcoin_node_url"
+rpc_user = "your_username"
+rpc_password = "your_password"

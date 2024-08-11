@@ -1,0 +1,71 @@
+# # Maximum width of each line
+# max_width = 100
+
+# # Use spaces instead of tabs
+# hard_tabs = false
+
+# # Width of tabs
+# tab_spaces = 4
+
+# # Newline style (can be "Auto", "Native", "Unix", "Windows")
+# newline_style = "Unix"
+
+# # How imports should be grouped and sorted
+# imports_granularity = "Crate"
+# group_imports = "StdExternalCrate"
+
+# # Reorder impl items
+# reorder_impl_items = true
+
+# # Format code inside macro declarations
+# format_macro_bodies = true
+
+# # Format code inside macro invocations
+# format_macro_matchers = true
+
+# # Use field initialize shorthand when possible
+# use_field_init_shorthand = true
+
+# # Format string literals where necessary
+# format_strings = true
+
+# # Where to put the opening brace of blocks
+# brace_style = "SameLineWhere"
+
+# # Control the layout of match arms
+# match_arm_blocks = true
+
+# # Merge multiple derives into a single one
+# merge_derives = true
+
+# # Use "Idiom" style for formatting comments
+# comment_width = 80
+
+# # Format generated files
+# format_generated_files = true
+
+
+
+# Basic
+hard_tabs = true
+max_width = 100
+use_small_heuristics = "Max"
+# Imports
+imports_granularity = "Crate"
+reorder_imports = true
+# Consistency
+newline_style = "Unix"
+# Format comments
+comment_width = 100
+wrap_comments = true
+# Misc
+chain_width = 80
+spaces_around_ranges = false
+binop_separator = "Back"
+reorder_impl_items = false
+match_arm_leading_pipes = "Preserve"
+match_arm_blocks = false
+match_block_trailing_comma = true
+trailing_comma = "Vertical"
+trailing_semicolon = false
+use_field_init_shorthand = true
