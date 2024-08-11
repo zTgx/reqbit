@@ -6,7 +6,8 @@ pub use reqbit::{
 #[tokio::main]
 async fn main() {
 	let cli = BitcoinCLI;
-	let info = cli.get_mining_info().await;
+	let template = cli.get_block_template("segwit").await;
+	// let info = cli.get_mining_info().await;
 
-	decorator::breautify(&info);
+	decorator::breautify(&template);
 }
