@@ -82,6 +82,18 @@ pub trait IWallet {
 		minconf: Option<u32>,
 		include_empty: Option<bool>,
 	) -> Value;
+
+	/// Lists all available wallets
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet (Note: This parameter
+	///   might not be necessary for this function and could be removed in a future update)
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing a list of all available wallets
+	async fn listwallets(&self, wallet_name: &str) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations
