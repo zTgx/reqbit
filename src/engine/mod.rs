@@ -70,7 +70,6 @@ impl BitcoinClient {
 	) -> Result<T, reqwest::Error> {
 		let req_body = rpc_request!(method, params);
 		let url = req_path.to_string();
-		println!(">> url: {}", url);
 
 		let response = self
 			.client

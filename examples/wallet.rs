@@ -8,7 +8,7 @@ async fn main() {
 	let cli = BitcoinCLI;
 
 	// let info = cli.createwallet("bob").await;
-	let info = cli.getbalance("bob").await;
+	let info = cli.getwalletinfo("bob").await;
 
 	decorator::breautify(&info);
 }

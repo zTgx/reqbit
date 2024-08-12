@@ -18,6 +18,19 @@ impl IWallet for BitcoinCLI {
 		rpc_response.result
 	}
 
+	async fn getwalletinfo(&self, wallet_name: &str) -> Value {
+		let client = BitcoinClient::new();
+		let endpoint = "wallet/".to_string() + wallet_name;
+		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "getwalletinfo", vec![])
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
+
 	async fn getbalance(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let endpoint = "wallet/".to_string() + wallet_name;
