@@ -22,8 +22,13 @@ async fn main() {
 	// let info = cli.generatetoaddress(1, "mp7esTo7hhSwFzi4HzUGZTBGizYH7yekEi", None).await;
 	// println!(">> generate to address: {:#?}", info);
 
-	// let info = cli.gettransaction("bob",
-	// "d9c926b512b9c3129341b22ce446671c768bf0957456b8786469cf3515956edd", None).await;
+	let info = cli
+		.gettransaction(
+			"bob",
+			"d9c926b512b9c3129341b22ce446671c768bf0957456b8786469cf3515956edd",
+			None,
+		)
+		.await;
 
 	decorator::breautify(&info);
 }

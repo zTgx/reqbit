@@ -1,7 +1,7 @@
 pub mod config;
 
 use self::config::ReqbitConfig;
-use reqwest::{self, Error};
+use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::fmt;
