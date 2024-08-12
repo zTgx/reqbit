@@ -10,9 +10,30 @@ pub mod wallet;
 /// operations, such as mining functions defined in the `IMining` trait.
 pub struct BitcoinCLI;
 
+/// Trait for Bitcoin wallet-related operations
 #[async_trait]
 pub trait IWallet {
+	/// Creates a new wallet with the given name
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to be created
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing information about the created wallet
 	async fn createwallet(&self, wallet_name: &str) -> Value;
+
+	/// Retrieves the balance of a specified wallet
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to query
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the balance of the specified wallet
+	async fn getbalance(&self, wallet_name: &str) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations

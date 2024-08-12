@@ -7,7 +7,8 @@ pub use reqbit::{
 async fn main() {
 	let cli = BitcoinCLI;
 
-	let info = cli.createwallet("bob").await;
+	// let info = cli.createwallet("bob").await;
+	let info = cli.getbalance("bob").await;
 
 	decorator::breautify(&info);
 }

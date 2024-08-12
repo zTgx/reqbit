@@ -4,6 +4,7 @@ use self::config::ReqbitConfig;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::fmt;
 
 #[derive(Serialize, Deserialize)]
 pub struct ReqBody {
@@ -32,8 +33,25 @@ macro_rules! rpc_request {
 	};
 }
 
+pub struct ReqPath {
+	pub base_url: String,
+	pub endpoint: String,
+}
+
+impl ReqPath {
+	pub fn new(base_url: &str, endpoint: &str) -> Self {
+		ReqPath { base_url: base_url.to_string(), endpoint: endpoint.to_string() }
+	}
+}
+
+impl fmt::Display for ReqPath {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		write!(f, "{}{}", self.base_url, self.endpoint)
+	}
+}
+
 pub struct BitcoinClient {
-	config: ReqbitConfig,
+	pub config: ReqbitConfig,
 	client: reqwest::Client,
 }
 
@@ -46,14 +64,17 @@ impl BitcoinClient {
 
 	pub async fn send_request<T: serde::de::DeserializeOwned>(
 		&self,
+		req_path: &ReqPath,
 		method: &str,
 		params: Vec<serde_json::Value>,
 	) -> Result<T, reqwest::Error> {
 		let req_body = rpc_request!(method, params);
+		let url = req_path.to_string();
+		println!(">> url: {}", url);
 
 		let response = self
 			.client
-			.post(&self.config.bitcoin_node)
+			.post(&url)
 			.header("Authorization", format!("Basic {}", self.config.get_auth()))
 			.json(&req_body)
 			.send()
