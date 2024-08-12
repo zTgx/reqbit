@@ -70,4 +70,31 @@ impl IWallet for BitcoinCLI {
 
 		rpc_response.result
 	}
+
+	async fn listreceivedbyaddress(
+		&self,
+		wallet_name: &str,
+		minconf: Option<u32>,
+		include_empty: Option<bool>,
+	) -> Value {
+		let client = BitcoinClient::new();
+
+		let endpoint = "wallet/".to_string() + wallet_name;
+
+		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
+
+		let minconf = minconf.unwrap_or(0);
+		let include_empty = include_empty.unwrap_or(false);
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(
+				&req_path,
+				"listreceivedbyaddress",
+				vec![minconf.into(), include_empty.into()],
+			)
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 }

@@ -63,6 +63,25 @@ pub trait IWallet {
 		label: Option<String>,
 		address_type: Option<String>,
 	) -> Value;
+
+	/// Lists received transactions by address for a specific wallet
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to query
+	/// * `minconf` - An optional minimum number of confirmations for transactions to be included
+	/// * `include_empty` - An optional boolean to include addresses that haven't received any
+	///   payments
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing a list of received transactions grouped by address
+	async fn listreceivedbyaddress(
+		&self,
+		wallet_name: &str,
+		minconf: Option<u32>,
+		include_empty: Option<bool>,
+	) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations
