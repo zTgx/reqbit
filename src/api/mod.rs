@@ -2,12 +2,18 @@ use async_trait::async_trait;
 use serde_json::Value;
 
 pub mod mining;
+pub mod wallet;
 
 /// Represents a Bitcoin Command Line Interface (CLI)
 ///
 /// This struct serves as a container for implementing various Bitcoin-related
 /// operations, such as mining functions defined in the `IMining` trait.
 pub struct BitcoinCLI;
+
+#[async_trait]
+pub trait IWallet {
+	async fn createwallet(&self, wallet_name: &str) -> Value;
+}
 
 /// Trait for Bitcoin mining-related operations
 #[async_trait]
