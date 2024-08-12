@@ -94,6 +94,62 @@ pub trait IWallet {
 	///
 	/// Returns a `Value` containing a list of all available wallets
 	async fn listwallets(&self, wallet_name: &str) -> Value;
+
+	/// Sends an amount of bitcoins to a specified address
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to send from
+	/// * `address` - The Bitcoin address to send to
+	/// * `amount` - The amount of bitcoins to send
+	/// * `comment` - An optional comment to store with the transaction
+	/// * `comment_to` - An optional comment to store the name of the recipient
+	/// * `subtract_fee_from_amount` - An optional boolean to subtract the fee from the amount being
+	///   sent
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the transaction ID of the sent transaction
+	async fn sendtoaddress(
+		&self,
+		wallet_name: &str,
+		address: &str,
+		amount: f64,
+		comment: Option<String>,
+		comment_to: Option<String>,
+		subtract_fee_from_amount: Option<bool>,
+	) -> Value;
+
+	/// Generates blocks and mines them to a specified address
+	///
+	/// # Arguments
+	///
+	/// * `nblocks` - The number of blocks to generate
+	/// * `address` - The address to send the newly generated bitcoin to
+	/// * `maxtries` - An optional maximum number of iterations to try (default: 1000000)
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing a list of block hashes of the generated blocks
+	async fn generatetoaddress(&self, nblocks: u32, address: &str, maxtries: Option<u32>) -> Value;
+
+	/// Retrieves detailed information about a specific transaction
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet
+	/// * `txid` - A string slice that holds the transaction ID
+	/// * `include_watchonly` - An optional boolean to include watch-only addresses (default: false)
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing detailed information about the transaction
+	async fn gettransaction(
+		&self,
+		wallet_name: &str,
+		txid: &str,
+		include_watchonly: Option<bool>,
+	) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations

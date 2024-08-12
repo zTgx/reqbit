@@ -1,7 +1,7 @@
 pub mod config;
 
 use self::config::ReqbitConfig;
-use reqwest;
+use reqwest::{self, Error};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::fmt;
@@ -75,9 +75,13 @@ impl BitcoinClient {
 			.client
 			.post(&url)
 			.header("Authorization", format!("Basic {}", self.config.get_auth()))
+			.header("Content-Type", "application/text")
 			.json(&req_body)
 			.send()
 			.await?;
+
+		println!("Status: {}", response.status());
+		println!("Headers: {:#?}", response.headers());
 
 		response.json::<T>().await
 	}
