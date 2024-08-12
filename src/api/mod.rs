@@ -29,4 +29,16 @@ pub trait IMining {
 	///
 	/// Returns a `Value` containing various mining statistics and information
 	async fn get_mining_info(&self) -> Value;
+
+	/// Retrieves the estimated network hashes per second
+	///
+	/// # Arguments
+	///
+	/// * `nblocks` - The number of blocks to look back (default: 120)
+	/// * `height` - The block height to estimate at (default: -1 for current best tip)
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the estimated network hash rate in hashes per second
+	async fn getnetworkhashps(&self, nblocks: Option<i32>, height: Option<u32>) -> Value;
 }

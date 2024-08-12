@@ -27,4 +27,18 @@ impl IMining for BitcoinCLI {
 
 		rpc_response.result
 	}
+
+	async fn getnetworkhashps(&self, nblocks: Option<i32>, height: Option<u32>) -> Value {
+		let client = BitcoinClient::new();
+
+		let nblocks = nblocks.unwrap_or(120);
+		let height = height.unwrap_or(1);
+
+		let rpc_response = client
+			.send_request::<RpcResponse>("getnetworkhashps", vec![nblocks.into(), height.into()])
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 }
