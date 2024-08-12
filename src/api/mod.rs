@@ -45,6 +45,24 @@ pub trait IWallet {
 	///
 	/// Returns a `Value` containing the balance of the specified wallet
 	async fn getbalance(&self, wallet_name: &str) -> Value;
+
+	/// Generates a new Bitcoin address for receiving payments
+	///
+	/// # Arguments
+	///
+	/// * `label` - An optional string to assign a label to the address
+	/// * `address_type` - An optional string to specify the type of address to generate (e.g.,
+	///   "legacy", "p2sh-segwit", "bech32")
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the newly generated Bitcoin address
+	async fn getnewaddress(
+		&self,
+		wallet_name: &str,
+		label: Option<String>,
+		address_type: Option<String>,
+	) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations

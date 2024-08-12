@@ -43,4 +43,31 @@ impl IWallet for BitcoinCLI {
 
 		rpc_response.result
 	}
+
+	async fn getnewaddress(
+		&self,
+		wallet_name: &str,
+		label: Option<String>,
+		address_type: Option<String>,
+	) -> Value {
+		let client = BitcoinClient::new();
+
+		let endpoint = "wallet/".to_string() + wallet_name;
+
+		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
+
+		let label = label.unwrap_or("".into());
+		let address_type = address_type.unwrap_or("legacy".into());
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(
+				&req_path,
+				"getnewaddress",
+				vec![label.into(), address_type.into()],
+			)
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 }
