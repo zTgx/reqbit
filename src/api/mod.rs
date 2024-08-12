@@ -24,6 +24,15 @@ pub trait IWallet {
 	/// Returns a `Value` containing information about the created wallet
 	async fn createwallet(&self, wallet_name: &str) -> Value;
 
+	/// Retrieves information about a specified wallet
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to query
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing detailed information about the specified wallet
 	async fn getwalletinfo(&self, wallet_name: &str) -> Value;
 
 	/// Retrieves the balance of a specified wallet
