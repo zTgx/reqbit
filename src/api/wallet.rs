@@ -8,7 +8,7 @@ use super::{BitcoinCLI, IWallet};
 impl IWallet for BitcoinCLI {
 	async fn createwallet(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "/");
+		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let rpc_response = client
 			.send_request::<RpcResponse>(&req_path, "createwallet", vec![wallet_name.into()])
