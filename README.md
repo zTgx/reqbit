@@ -1,2 +1,3 @@
 reqbit  
-interact with bitcoin core.
+
+**WIP**
