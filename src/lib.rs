@@ -15,6 +15,19 @@ pub struct ReqBit;
 /// Trait for Bitcoin wallet-related operations
 #[async_trait]
 pub trait IWallet {
+	/// Loads a wallet into the Bitcoin Core RPC
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet to be loaded
+	/// * `load_on_startup` - An optional boolean to specify if the wallet should be loaded on
+	///   startup
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing information about the loaded wallet
+	async fn loadwallet(&self, wallet_name: &str, load_on_startup: Option<bool>) -> Value;
+
 	/// Creates a new wallet with the given name
 	///
 	/// # Arguments

@@ -7,6 +7,22 @@ use serde_json::{json, Value};
 
 #[async_trait]
 impl IWallet for ReqBit {
+	async fn loadwallet(&self, wallet_name: &str, load_on_startup: Option<bool>) -> Value {
+		let client = BitcoinClient::new();
+		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
+
+		let mut params = vec![wallet_name.into()];
+		if let Some(load_on_startup) = load_on_startup {
+			params.push(json!({"load_on_startup": load_on_startup}));
+		}
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "loadwallet", params)
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 	async fn createwallet(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
