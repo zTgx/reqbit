@@ -165,6 +165,31 @@ pub trait IWallet {
 	///
 	/// Returns a `Value` containing the result of the operation
 	async fn setlabel(&self, wallet_name: &str, address: &str, label: &str) -> Value;
+
+	/// Lists unspent transaction outputs
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet
+	/// * `minconf` - An optional minimum number of confirmations (default: 1)
+	/// * `maxconf` - An optional maximum number of confirmations (default: 9999999)
+	/// * `addresses` - An optional vector of addresses to filter
+	/// * `include_unsafe` - An optional boolean to include outputs that are not safe to spend
+	///   (default: true)
+	/// * `query_options` - An optional JSON object with query options
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing an array of unspent transaction outputs
+	async fn listunspent(
+		&self,
+		wallet_name: &str,
+		minconf: Option<u32>,
+		maxconf: Option<u32>,
+		addresses: Option<Vec<String>>,
+		include_unsafe: Option<bool>,
+		query_options: Option<Value>,
+	) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations
@@ -214,4 +239,54 @@ pub trait IBlockchain {
 	///
 	/// Returns a `Value` containing information about the specified block
 	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Value;
+}
+
+#[async_trait]
+pub trait IRawTransaction {
+	/// Creates a raw transaction
+	///
+	/// # Arguments
+	///
+	/// * `inputs` - A vector of transaction inputs
+	/// * `outputs` - A vector of transaction outputs
+	/// * `locktime` - An optional locktime for the transaction
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the hex-encoded raw transaction
+	async fn createrawtransaction(
+		&self,
+		inputs: Vec<Value>,
+		outputs: Vec<Value>,
+		locktime: Option<u32>,
+	) -> Value;
+
+	/// Signs a raw transaction with the specified private keys
+	///
+	/// # Arguments
+	///
+	/// * `hexstring` - A string slice that holds the hex-encoded raw transaction
+	/// * `privkeys` - A vector of private keys to sign the transaction with
+	/// * `sighash_type` - An optional string slice that specifies the signature hash type
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the signed transaction
+	async fn signrawtransactionwithkey(
+		&self,
+		hexstring: &str,
+		privkeys: Vec<String>,
+		sighash_type: Option<&str>,
+	) -> Value;
+
+	/// Submits a raw transaction to the network
+	///
+	/// # Arguments
+	///
+	/// * `hexstring` - A string slice that holds the hex-encoded raw transaction
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the transaction hash in hex
+	async fn sendrawtransaction(&self, hexstring: &str) -> Value;
 }

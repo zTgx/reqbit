@@ -3,7 +3,7 @@ use crate::{
 	IWallet, ReqBit,
 };
 use async_trait::async_trait;
-use serde_json::Value;
+use serde_json::{json, Value};
 
 #[async_trait]
 impl IWallet for ReqBit {
@@ -203,6 +203,39 @@ impl IWallet for ReqBit {
 
 		let rpc_response =
 			client.send_request::<RpcResponse>(&req_path, "setlabel", params).await.unwrap();
+
+		rpc_response.result
+	}
+
+	async fn listunspent(
+		&self,
+		wallet_name: &str,
+		minconf: Option<u32>,
+		maxconf: Option<u32>,
+		addresses: Option<Vec<String>>,
+		include_unsafe: Option<bool>,
+		query_options: Option<Value>,
+	) -> Value {
+		let client = BitcoinClient::new();
+		let req_path =
+			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+
+		let mut params = Vec::new();
+		params.push(minconf.unwrap_or(1).into());
+		params.push(maxconf.unwrap_or(9999999).into());
+		params.push(addresses.map_or(json!([]), |addrs| json!(addrs)));
+		params.push(include_unsafe.unwrap_or(true).into());
+		if let Some(options) = query_options {
+			params.push(options);
+		}
+
+		println!("URL: {}", req_path.to_string());
+		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "listunspent", params)
+			.await
+			.unwrap();
 
 		rpc_response.result
 	}
