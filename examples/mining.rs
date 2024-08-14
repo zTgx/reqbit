@@ -1,15 +1,12 @@
-pub use reqbit::{
-	api::{BitcoinCLI, IMining},
-	decorator,
-};
+pub use reqbit::{decorator, IMining, ReqBit};
 
 #[tokio::main]
 async fn main() {
-	let cli = BitcoinCLI;
+	let reqbit = ReqBit;
 
-	// let info = cli.get_block_template("segwit").await;
-	// let info = cli.get_mining_info().await;
-	let info = cli.getnetworkhashps(None, None).await;
+	// let info = reqbit.get_block_template("segwit").await;
+	// let info = reqbit.get_mining_info().await;
+	let info = reqbit.getnetworkhashps(None, None).await;
 
 	decorator::breautify(&info);
 }

@@ -2,10 +2,10 @@ use crate::engine::{BitcoinClient, ReqPath, RpcResponse};
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
-use super::{BitcoinCLI, IMining};
+use crate::{IMining, ReqBit};
 
 #[async_trait]
-impl IMining for BitcoinCLI {
+impl IMining for ReqBit {
 	async fn get_block_template(&self, template: &str) -> Value {
 		let client = BitcoinClient::new();
 		let req_path = ReqPath::new(&client.config.bitcoin_node, "/");

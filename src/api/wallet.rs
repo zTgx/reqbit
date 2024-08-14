@@ -1,11 +1,12 @@
-use crate::engine::{BitcoinClient, ReqPath, RpcResponse};
+use crate::{
+	engine::{BitcoinClient, ReqPath, RpcResponse},
+	IWallet, ReqBit,
+};
 use async_trait::async_trait;
 use serde_json::Value;
 
-use super::{BitcoinCLI, IWallet};
-
 #[async_trait]
-impl IWallet for BitcoinCLI {
+impl IWallet for ReqBit {
 	async fn createwallet(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let req_path = ReqPath::new(&client.config.bitcoin_node, "");

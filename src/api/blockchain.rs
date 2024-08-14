@@ -1,11 +1,12 @@
-use crate::engine::{BitcoinClient, ReqPath, RpcResponse};
+use crate::{
+	engine::{BitcoinClient, ReqPath, RpcResponse},
+	IBlockchain, ReqBit,
+};
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
-use super::{BitcoinCLI, IBlockchain};
-
 #[async_trait]
-impl IBlockchain for BitcoinCLI {
+impl IBlockchain for ReqBit {
 	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Value {
 		let client = BitcoinClient::new();
 		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
