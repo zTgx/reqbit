@@ -190,4 +190,20 @@ impl IWallet for ReqBit {
 
 		rpc_response.result
 	}
+
+	async fn setlabel(&self, wallet_name: &str, address: &str, label: &str) -> Value {
+		let client = BitcoinClient::new();
+		let req_path =
+			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+
+		let params = vec![address.into(), label.into()];
+
+		println!("URL: {}", req_path.to_string());
+		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
+
+		let rpc_response =
+			client.send_request::<RpcResponse>(&req_path, "setlabel", params).await.unwrap();
+
+		rpc_response.result
+	}
 }

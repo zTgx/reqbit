@@ -152,6 +152,19 @@ pub trait IWallet {
 		txid: &str,
 		include_watchonly: Option<bool>,
 	) -> Value;
+
+	/// Sets a label for a given address
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet
+	/// * `address` - A string slice that holds the Bitcoin address to label
+	/// * `label` - A string slice that holds the label to assign to the address
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the result of the operation
+	async fn setlabel(&self, wallet_name: &str, address: &str, label: &str) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations
