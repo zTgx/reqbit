@@ -18,16 +18,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 		"txid": first_utxo["txid"],
 		"vout": first_utxo["vout"]
 	})];
+
+	// "Fee exceeds maximum configured by user (e.g. -maxtxfee, maxfeerate)"
 	let outputs = vec![json!({
-		"bcrt1qyouraddresshere": 0.001
+		"mnEGFRaKoocF4W2jx4GXpq6X5hZ38ecZN8": 0.01
 	})];
 	let raw_tx = reqbit.createrawtransaction(inputs, outputs, None).await;
 	println!("Raw transaction: {}", raw_tx);
 
 	// Step 2: Sign the raw transaction
-	let privkeys = vec!["your_private_key_here".to_string()];
-	let signed_tx =
-		reqbit.signrawtransactionwithkey(raw_tx.as_str().unwrap(), privkeys, None).await;
+	let signed_tx = reqbit
+		.signrawtransactionwithwallet(&&wallet_name, raw_tx.as_str().unwrap(), None, None)
+		.await;
 	println!("Signed transaction: {}", signed_tx);
 
 	// Step 3: Send the raw transaction
@@ -35,7 +37,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 	println!("Transaction hash: {}", tx_hash);
 
 	// Step 4: Get transaction details
-	let wallet_name = ""; // Replace with your wallet name
 	let transaction_details =
 		reqbit.gettransaction(wallet_name, tx_hash.as_str().unwrap(), None).await;
 	println!("Transaction details: {}", transaction_details);

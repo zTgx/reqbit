@@ -20,6 +20,9 @@ impl IRawTransaction for ReqBit {
 			params.push(lt.into());
 		}
 
+		println!("URL: {}", req_path.to_string());
+		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
+
 		let rpc_response = client
 			.send_request::<RpcResponse>(&req_path, "createrawtransaction", params)
 			.await

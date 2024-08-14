@@ -190,6 +190,26 @@ pub trait IWallet {
 		include_unsafe: Option<bool>,
 		query_options: Option<Value>,
 	) -> Value;
+
+	/// Signs a raw transaction with keys from the wallet
+	///
+	/// # Arguments
+	///
+	/// * `wallet_name` - A string slice that holds the name of the wallet
+	/// * `hexstring` - A string slice that holds the raw transaction in hexadecimal format
+	/// * `prevtxs` - An optional vector of previous dependent transaction outputs
+	/// * `sighash_type` - An optional string slice that holds the signature hash type
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the signed transaction
+	async fn signrawtransactionwithwallet(
+		&self,
+		wallet_name: &str,
+		hexstring: &str,
+		prevtxs: Option<Vec<Value>>,
+		sighash_type: Option<&str>,
+	) -> Value;
 }
 
 /// Trait for Bitcoin mining-related operations

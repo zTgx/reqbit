@@ -239,4 +239,34 @@ impl IWallet for ReqBit {
 
 		rpc_response.result
 	}
+
+	async fn signrawtransactionwithwallet(
+		&self,
+		wallet_name: &str,
+		hexstring: &str,
+		prevtxs: Option<Vec<Value>>,
+		sighash_type: Option<&str>,
+	) -> Value {
+		let client = BitcoinClient::new();
+		let req_path =
+			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+
+		let mut params = vec![hexstring.into()];
+		if let Some(prev) = prevtxs {
+			params.push(json!(prev));
+		}
+		if let Some(sighash) = sighash_type {
+			params.push(sighash.into());
+		}
+
+		println!("URL: {}", req_path.to_string());
+		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "signrawtransactionwithwallet", params)
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 }
