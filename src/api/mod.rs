@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use serde_json::Value;
 
+pub mod blockchain;
 pub mod mining;
 pub mod wallet;
 
@@ -184,4 +185,19 @@ pub trait IMining {
 	///
 	/// Returns a `Value` containing the estimated network hash rate in hashes per second
 	async fn getnetworkhashps(&self, nblocks: Option<i32>, height: Option<u32>) -> Value;
+}
+
+#[async_trait]
+pub trait IBlockchain {
+	/// Retrieves information about a block
+	///
+	/// # Arguments
+	///
+	/// * `blockhash` - A string slice that holds the block hash
+	/// * `verbosity` - An optional integer that determines the amount of information returned
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing information about the specified block
+	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Value;
 }
