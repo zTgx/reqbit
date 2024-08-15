@@ -322,4 +322,46 @@ pub trait IRawTransaction {
 	///
 	/// Returns a `Value` containing the transaction hash in hex
 	async fn sendrawtransaction(&self, hexstring: &str) -> Value;
+
+	/// Retrieves a raw transaction
+	///
+	/// # Arguments
+	///
+	/// * `txid` - A string slice that holds the transaction ID
+	/// * `verbose` - An optional boolean to specify if the output should be in verbose format
+	/// * `blockhash` - An optional string slice that holds the block hash to look for the
+	///   transaction
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the raw transaction data
+	async fn getrawtransaction(
+		&self,
+		txid: &str,
+		verbose: Option<bool>,
+		blockhash: Option<&str>,
+	) -> Value;
+
+	/// Decodes a raw transaction
+	///
+	/// # Arguments
+	///
+	/// * `hexstring` - A string slice that holds the hex-encoded raw transaction
+	/// * `iswitness` - An optional boolean to indicate if the transaction is a witness transaction
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing the decoded transaction information
+	async fn decoderawtransaction(&self, hexstring: &str, iswitness: Option<bool>) -> Value;
+}
+
+/// Trait for Bitcoin network-related operations
+#[async_trait]
+pub trait INetwork {
+	/// Retrieves information about the state of the network and the node
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing detailed information about the network and node
+	async fn getnetworkinfo(&self) -> Value;
 }
