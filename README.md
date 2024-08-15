@@ -1,5 +1,7 @@
 # ReqBit
 
+[![Crates.io](https://img.shields.io/crates/v/reqbit.svg)](https://crates.io/crates/reqbit)
+
 ReqBit is a Rust library that provides a robust and user-friendly interface for interacting with Bitcoin Core's RPC API. It simplifies Bitcoin-related operations, making it easier for developers to build and maintain Bitcoin applications.
 
 ## Key Features
