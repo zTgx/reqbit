@@ -21,4 +21,30 @@ impl IBlockchain for ReqBit {
 
 		rpc_response.result
 	}
+
+	async fn getblockhash(&self, height: u32) -> Value {
+		let client = BitcoinClient::new();
+		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
+
+		let params = vec![json!(height)];
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "getblockhash", params)
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
+
+	async fn getblockchaininfo(&self) -> Value {
+		let client = BitcoinClient::new();
+		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
+
+		let rpc_response = client
+			.send_request::<RpcResponse>(&req_path, "getblockchaininfo", vec![])
+			.await
+			.unwrap();
+
+		rpc_response.result
+	}
 }
