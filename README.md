@@ -1,5 +1,8 @@
 # ReqBit
 
+**WIP**
+This library is the output of learning Bitcoin.  
+
 [![Crates.io](https://img.shields.io/crates/v/reqbit.svg)](https://crates.io/crates/reqbit)
 
 ReqBit is a Rust library that provides a robust and user-friendly interface for interacting with Bitcoin Core's RPC API. It simplifies Bitcoin-related operations, making it easier for developers to build and maintain Bitcoin applications.
@@ -27,6 +30,14 @@ To use ReqBit in your project, add the following to your `Cargo.toml`:
 reqbit = "0.1.0"
 ```
 
+And update `reqbit.toml` with your Bitcoin node configuration:
+
+```
+bitcoin_node = "bitcoin_node_url"
+rpc_user = "your_username"
+rpc_password = "your_password"
+```
+
 Then, you can start using ReqBit in your Rust code:
 ```rust
 use reqbit::ReqBit;
@@ -47,7 +58,6 @@ ReqBit requires a running Bitcoin Core node. Make sure to configure your `bitcoi
 server=1
 rpcuser=your_username
 rpcpassword=your_password
-rpcallowip=127.0.0.1
 ```
 
 
