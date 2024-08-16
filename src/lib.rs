@@ -383,3 +383,14 @@ pub trait INetwork {
 	/// Returns a `Value` containing detailed information about the network and node
 	async fn getnetworkinfo(&self) -> Value;
 }
+
+/// Trait for Bitcoin ZeroMQ-related operations
+#[async_trait]
+pub trait IZmq {
+	/// Retrieves the list of ZeroMQ notifications
+	///
+	/// # Returns
+	///
+	/// Returns a `Value` containing information about the active ZeroMQ notifications
+	async fn getzmqnotifications(&self) -> Value;
+}
