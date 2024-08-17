@@ -19,3 +19,9 @@ zmq = "0.10"
 hex = "0.4"
 byteorder = "1.4"
 sha2 = "0.10"
+
+
+[[bin]]
+name = "zmq"
+path = "bin/zmq.rs"
+

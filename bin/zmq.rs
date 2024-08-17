@@ -56,9 +56,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 								println!("Hash: {}", hash);
 							},
 							"rawtx" => {
-								// println!("Raw transaction (first 20 bytes): {:?}",
-								// &body[..20.min(body.len())]);
-
 								// Decode raw transaction
 								let decoded_tx = reqbit::ReqBit
 									.decoderawtransaction(&hex::encode(body), None)
@@ -71,19 +68,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 									);
 								}
 							},
-							"rawblock" => {
-								// println!("Raw block (first 20 bytes): {:?}",
-								// &body[..20.min(body.len())]); Decode raw block
-								match parse_block(body) {
-									Ok(block) => {
-										println!("Decoded block:");
-										println!(
-											"{}",
-											serde_json::to_string_pretty(&block).unwrap()
-										);
-									},
-									Err(e) => eprintln!("Error decoding block: {:?}", e),
-								}
+							"rawblock" => match parse_block(body) {
+								Ok(block) => {
+									println!("Decoded block:");
+									println!("{}", serde_json::to_string_pretty(&block).unwrap());
+								},
+								Err(e) => eprintln!("Error decoding block: {:?}", e),
 							},
 							_ => println!("Unknown topic"),
 						}
