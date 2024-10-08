@@ -3,6 +3,8 @@ pub mod decorator;
 mod engine;
 
 extern crate async_trait;
+use std::fmt;
+
 use async_trait::async_trait;
 use serde_json::Value;
 
@@ -11,6 +13,24 @@ use serde_json::Value;
 /// This struct serves as a container for implementing various Bitcoin-related
 /// operations, such as mining functions defined in the `IMining` trait.
 pub struct ReqBit;
+
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum AddressType {
+	Legacy,
+	P2shSegwit,
+	Bech32,
+}
+
+impl fmt::Display for AddressType {
+	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+		match self {
+			AddressType::Legacy => write!(f, "legacy"),
+			AddressType::P2shSegwit => write!(f, "p2sh-segwit"),
+			AddressType::Bech32 => write!(f, "bech32"),
+		}
+	}
+}
 
 /// Trait for Bitcoin wallet-related operations
 #[async_trait]
@@ -66,7 +86,7 @@ pub trait IWallet {
 	/// # Arguments
 	///
 	/// * `label` - An optional string to assign a label to the address
-	/// * `address_type` - An optional string to specify the type of address to generate (e.g.,
+	/// * `address_type` - An optional AddressType to specify the type of address to generate (e.g.,
 	///   "legacy", "p2sh-segwit", "bech32")
 	///
 	/// # Returns
@@ -76,7 +96,7 @@ pub trait IWallet {
 		&self,
 		wallet_name: &str,
 		label: Option<String>,
-		address_type: Option<String>,
+		address_type: Option<AddressType>,
 	) -> Value;
 
 	/// Lists received transactions by address for a specific wallet

@@ -1,6 +1,6 @@
 use crate::{
 	engine::{BitcoinClient, ReqPath, RpcResponse},
-	IWallet, ReqBit,
+	AddressType, IWallet, ReqBit,
 };
 use async_trait::async_trait;
 use serde_json::{json, Value};
@@ -68,7 +68,7 @@ impl IWallet for ReqBit {
 		&self,
 		wallet_name: &str,
 		label: Option<String>,
-		address_type: Option<String>,
+		address_type: Option<AddressType>,
 	) -> Value {
 		let client = BitcoinClient::new();
 
@@ -77,13 +77,13 @@ impl IWallet for ReqBit {
 		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
 
 		let label = label.unwrap_or("".into());
-		let address_type = address_type.unwrap_or("legacy".into());
+		let address_type = address_type.unwrap_or(AddressType::Legacy);
 
 		let rpc_response = client
 			.send_request::<RpcResponse>(
 				&req_path,
 				"getnewaddress",
-				vec![label.into(), address_type.into()],
+				vec![label.into(), address_type.to_string().into()],
 			)
 			.await
 			.unwrap();
