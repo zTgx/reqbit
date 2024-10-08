@@ -24,8 +24,11 @@ impl IWallet for ReqBit {
 		rpc_response.result
 	}
 	async fn createwallet(&self, wallet_name: &str) -> Value {
+		println!(">> CREATE WALLET name: {wallet_name}");
+
 		let client = BitcoinClient::new();
 		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
+		println!(">> ReqPath: {:?}", req_path);
 
 		let rpc_response = client
 			.send_request::<RpcResponse>(&req_path, "createwallet", vec![wallet_name.into()])

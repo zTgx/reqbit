@@ -20,6 +20,7 @@ hex = "0.4"
 byteorder = "1.4"
 sha2 = "0.10"
 warp = "0.3"
+random-string = "1.1.0"
 
 [[bin]]
 name = "zmq"

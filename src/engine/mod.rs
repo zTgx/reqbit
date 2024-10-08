@@ -33,6 +33,7 @@ macro_rules! rpc_request {
 	};
 }
 
+#[derive(Debug)]
 pub struct ReqPath {
 	pub base_url: String,
 	pub endpoint: String,
