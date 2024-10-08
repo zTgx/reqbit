@@ -14,12 +14,14 @@ use serde_json::Value;
 /// operations, such as mining functions defined in the `IMining` trait.
 pub struct ReqBit;
 
+// Refer to bitcoin core: OutputType
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum AddressType {
-	Legacy,
-	P2shSegwit,
-	Bech32,
+	Legacy,     // Addresses in this format start with the number "1."
+	P2shSegwit, // Addresses in this format start with the number "3."
+	Bech32,     // Addresses in this format start with "bc1."
+	BECH32M,    // Addresses in this format start with "bc1p." (taproot)
 }
 
 impl fmt::Display for AddressType {
@@ -28,6 +30,7 @@ impl fmt::Display for AddressType {
 			AddressType::Legacy => write!(f, "legacy"),
 			AddressType::P2shSegwit => write!(f, "p2sh-segwit"),
 			AddressType::Bech32 => write!(f, "bech32"),
+			AddressType::BECH32M => write!(f, "bench32m"),
 		}
 	}
 }
