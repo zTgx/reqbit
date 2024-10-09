@@ -1,5 +1,5 @@
 use crate::{
-	engine::{BitcoinClient, ReqPath, RpcResponse},
+	engine::{BitcoinClient, RpcResponse},
 	AddressType, IWallet, ReqBit,
 };
 use async_trait::async_trait;
@@ -9,29 +9,22 @@ use serde_json::{json, Value};
 impl IWallet for ReqBit {
 	async fn loadwallet(&self, wallet_name: &str, load_on_startup: Option<bool>) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![wallet_name.into()];
 		if let Some(load_on_startup) = load_on_startup {
 			params.push(json!({"load_on_startup": load_on_startup}));
 		}
 
-		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "loadwallet", params)
-			.await
-			.unwrap();
+		let rpc_response =
+			client.send_request::<RpcResponse>(None, "loadwallet", params).await.unwrap();
 
 		rpc_response.result
 	}
 	async fn createwallet(&self, wallet_name: &str) -> Value {
-		println!(">> CREATE WALLET name: {wallet_name}");
-
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
-		println!(">> ReqPath: {:?}", req_path);
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "createwallet", vec![wallet_name.into()])
+			.send_request::<RpcResponse>(None, "createwallet", vec![wallet_name.into()])
 			.await
 			.unwrap();
 
@@ -41,10 +34,9 @@ impl IWallet for ReqBit {
 	async fn getwalletinfo(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let endpoint = "wallet/".to_string() + wallet_name;
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "getwalletinfo", vec![])
+			.send_request::<RpcResponse>(Some(&endpoint), "getwalletinfo", vec![])
 			.await
 			.unwrap();
 
@@ -54,10 +46,9 @@ impl IWallet for ReqBit {
 	async fn getbalance(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let endpoint = "wallet/".to_string() + wallet_name;
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "getbalance", vec![])
+			.send_request::<RpcResponse>(Some(&endpoint), "getbalance", vec![])
 			.await
 			.unwrap();
 
@@ -73,15 +64,12 @@ impl IWallet for ReqBit {
 		let client = BitcoinClient::new();
 
 		let endpoint = "wallet/".to_string() + wallet_name;
-
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
-
 		let label = label.unwrap_or("".into());
 		let address_type = address_type.unwrap_or(AddressType::Legacy);
 
 		let rpc_response = client
 			.send_request::<RpcResponse>(
-				&req_path,
+				Some(&endpoint),
 				"getnewaddress",
 				vec![label.into(), address_type.to_string().into()],
 			)
@@ -100,15 +88,12 @@ impl IWallet for ReqBit {
 		let client = BitcoinClient::new();
 
 		let endpoint = "wallet/".to_string() + wallet_name;
-
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
-
 		let minconf = minconf.unwrap_or(0);
 		let include_empty = include_empty.unwrap_or(false);
 
 		let rpc_response = client
 			.send_request::<RpcResponse>(
-				&req_path,
+				Some(&endpoint),
 				"listreceivedbyaddress",
 				vec![minconf.into(), include_empty.into()],
 			)
@@ -121,10 +106,9 @@ impl IWallet for ReqBit {
 	async fn listwallets(&self, wallet_name: &str) -> Value {
 		let client = BitcoinClient::new();
 		let endpoint = "wallet/".to_string() + wallet_name;
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "listwallets", vec![])
+			.send_request::<RpcResponse>(Some(&endpoint), "listwallets", vec![])
 			.await
 			.unwrap();
 
@@ -142,7 +126,6 @@ impl IWallet for ReqBit {
 	) -> Value {
 		let client = BitcoinClient::new();
 		let endpoint = "wallet/".to_string() + wallet_name;
-		let req_path = ReqPath::new(&client.config.bitcoin_node, &endpoint);
 
 		let mut params = vec![address.into(), amount.into()];
 
@@ -157,7 +140,7 @@ impl IWallet for ReqBit {
 		}
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "sendtoaddress", params)
+			.send_request::<RpcResponse>(Some(&endpoint), "sendtoaddress", params)
 			.await
 			.unwrap();
 
@@ -166,7 +149,6 @@ impl IWallet for ReqBit {
 
 	async fn generatetoaddress(&self, nblocks: u32, address: &str, maxtries: Option<u32>) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![nblocks.into(), address.into()];
 
@@ -174,11 +156,10 @@ impl IWallet for ReqBit {
 			params.push(max_tries.into());
 		}
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
 		let rpc_response =
-			client.send_request::<RpcResponse>(&req_path, "generatetoaddress", params).await;
+			client.send_request::<RpcResponse>(None, "generatetoaddress", params).await;
 
 		rpc_response.unwrap().result
 	}
@@ -190,8 +171,7 @@ impl IWallet for ReqBit {
 		include_watchonly: Option<bool>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path =
-			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+		let endpoint = "wallet/".to_string() + wallet_name;
 
 		let mut params = vec![txid.into()];
 
@@ -199,11 +179,10 @@ impl IWallet for ReqBit {
 			params.push(include_watch.into());
 		}
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "gettransaction", params)
+			.send_request::<RpcResponse>(Some(&endpoint), "gettransaction", params)
 			.await
 			.unwrap();
 
@@ -212,16 +191,16 @@ impl IWallet for ReqBit {
 
 	async fn setlabel(&self, wallet_name: &str, address: &str, label: &str) -> Value {
 		let client = BitcoinClient::new();
-		let req_path =
-			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+		let endpoint = "wallet/".to_string() + wallet_name;
 
 		let params = vec![address.into(), label.into()];
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
-		let rpc_response =
-			client.send_request::<RpcResponse>(&req_path, "setlabel", params).await.unwrap();
+		let rpc_response = client
+			.send_request::<RpcResponse>(Some(&endpoint), "setlabel", params)
+			.await
+			.unwrap();
 
 		rpc_response.result
 	}
@@ -236,8 +215,7 @@ impl IWallet for ReqBit {
 		query_options: Option<Value>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path =
-			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+		let endpoint = "wallet/".to_string() + wallet_name;
 
 		let mut params = Vec::new();
 		params.push(minconf.unwrap_or(1).into());
@@ -248,11 +226,10 @@ impl IWallet for ReqBit {
 			params.push(options);
 		}
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "listunspent", params)
+			.send_request::<RpcResponse>(Some(&endpoint), "listunspent", params)
 			.await
 			.unwrap();
 
@@ -267,8 +244,7 @@ impl IWallet for ReqBit {
 		sighash_type: Option<&str>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path =
-			ReqPath::new(&client.config.bitcoin_node, &format!("wallet/{}", wallet_name));
+		let endpoint = "wallet/".to_string() + wallet_name;
 
 		let mut params = vec![hexstring.into()];
 		if let Some(prev) = prevtxs {
@@ -278,11 +254,10 @@ impl IWallet for ReqBit {
 			params.push(sighash.into());
 		}
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "signrawtransactionwithwallet", params)
+			.send_request::<RpcResponse>(Some(&endpoint), "signrawtransactionwithwallet", params)
 			.await
 			.unwrap();
 

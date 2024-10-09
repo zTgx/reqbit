@@ -1,4 +1,4 @@
-use crate::engine::{BitcoinClient, ReqPath, RpcResponse};
+use crate::engine::{BitcoinClient, RpcResponse};
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
@@ -13,18 +13,16 @@ impl IRawTransaction for ReqBit {
 		locktime: Option<u32>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![json!(inputs), json!(outputs)];
 		if let Some(lt) = locktime {
 			params.push(lt.into());
 		}
 
-		println!("URL: {}", req_path.to_string());
 		println!("Request body: {}", serde_json::to_string_pretty(&params).unwrap());
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "createrawtransaction", params)
+			.send_request::<RpcResponse>(None, "createrawtransaction", params)
 			.await
 			.unwrap();
 
@@ -38,7 +36,6 @@ impl IRawTransaction for ReqBit {
 		sighash_type: Option<&str>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![hexstring.into(), json!(privkeys)];
 		if let Some(sighash) = sighash_type {
@@ -46,7 +43,7 @@ impl IRawTransaction for ReqBit {
 		}
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "signrawtransactionwithkey", params)
+			.send_request::<RpcResponse>(None, "signrawtransactionwithkey", params)
 			.await
 			.unwrap();
 
@@ -55,10 +52,9 @@ impl IRawTransaction for ReqBit {
 
 	async fn sendrawtransaction(&self, hexstring: &str) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "sendrawtransaction", vec![hexstring.into()])
+			.send_request::<RpcResponse>(None, "sendrawtransaction", vec![hexstring.into()])
 			.await
 			.unwrap();
 
@@ -72,7 +68,6 @@ impl IRawTransaction for ReqBit {
 		blockhash: Option<&str>,
 	) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![txid.into()];
 		if let Some(v) = verbose {
@@ -83,7 +78,7 @@ impl IRawTransaction for ReqBit {
 		}
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "getrawtransaction", params)
+			.send_request::<RpcResponse>(None, "getrawtransaction", params)
 			.await
 			.unwrap();
 
@@ -92,7 +87,6 @@ impl IRawTransaction for ReqBit {
 
 	async fn decoderawtransaction(&self, hexstring: &str, iswitness: Option<bool>) -> Value {
 		let client = BitcoinClient::new();
-		let req_path = ReqPath::new(&client.config.bitcoin_node, "");
 
 		let mut params = vec![hexstring.into()];
 		if let Some(witness) = iswitness {
@@ -100,7 +94,7 @@ impl IRawTransaction for ReqBit {
 		}
 
 		let rpc_response = client
-			.send_request::<RpcResponse>(&req_path, "decoderawtransaction", params)
+			.send_request::<RpcResponse>(None, "decoderawtransaction", params)
 			.await
 			.unwrap();
 

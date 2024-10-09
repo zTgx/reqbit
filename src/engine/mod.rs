@@ -5,7 +5,6 @@ use crate::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::fmt;
 
 #[derive(Serialize, Deserialize)]
 pub struct ReqBody {
@@ -34,25 +33,6 @@ macro_rules! rpc_request {
 	};
 }
 
-// TODO: Unneed this struct, simply transfer a str as endpoint.
-#[derive(Debug)]
-pub struct ReqPath {
-	pub base_url: String,
-	pub endpoint: String,
-}
-
-impl ReqPath {
-	pub fn new(base_url: &str, endpoint: &str) -> Self {
-		ReqPath { base_url: base_url.to_string(), endpoint: endpoint.to_string() }
-	}
-}
-
-impl fmt::Display for ReqPath {
-	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-		write!(f, "{}{}", self.base_url, self.endpoint)
-	}
-}
-
 pub struct BitcoinClient {
 	pub config: ReqbitConfig,
 	client: reqwest::Client,
@@ -67,12 +47,12 @@ impl BitcoinClient {
 
 	pub async fn send_request<T: serde::de::DeserializeOwned>(
 		&self,
-		req_path: &ReqPath,
+		req_path: Option<&str>,
 		method: &str,
 		params: Vec<serde_json::Value>,
 	) -> Result<T> {
 		let req_body = rpc_request!(method, params);
-		let url = req_path.to_string();
+		let url = format!("{}{}", self.config.bitcoin_node, req_path.unwrap_or(""));
 
 		let response = self
 			.client
