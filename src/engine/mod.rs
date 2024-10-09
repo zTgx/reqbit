@@ -1,6 +1,7 @@
 pub mod config;
 
 use self::config::ReqbitConfig;
+use crate::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -33,6 +34,7 @@ macro_rules! rpc_request {
 	};
 }
 
+// TODO: Unneed this struct, simply transfer a str as endpoint.
 #[derive(Debug)]
 pub struct ReqPath {
 	pub base_url: String,
@@ -68,7 +70,7 @@ impl BitcoinClient {
 		req_path: &ReqPath,
 		method: &str,
 		params: Vec<serde_json::Value>,
-	) -> Result<T, reqwest::Error> {
+	) -> Result<T> {
 		let req_body = rpc_request!(method, params);
 		let url = req_path.to_string();
 

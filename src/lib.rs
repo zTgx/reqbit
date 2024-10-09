@@ -8,6 +8,20 @@ use std::fmt;
 use async_trait::async_trait;
 use serde_json::Value;
 
+// TODO:
+pub enum ReqError {
+	ReqwestError(reqwest::Error),
+	Other,
+}
+
+impl From<reqwest::Error> for ReqError {
+	fn from(e: reqwest::Error) -> ReqError {
+		ReqError::ReqwestError(e)
+	}
+}
+
+pub type Result<T> = std::result::Result<T, reqwest::Error>;
+
 /// Represents a Bitcoin Command Line Interface (CLI)
 ///
 /// This struct serves as a container for implementing various Bitcoin-related
@@ -404,7 +418,7 @@ pub trait INetwork {
 	/// # Returns
 	///
 	/// Returns a `Value` containing detailed information about the network and node
-	async fn getnetworkinfo(&self) -> Value;
+	async fn getnetworkinfo(&self) -> Result<Value>;
 }
 
 /// Trait for Bitcoin ZeroMQ-related operations
