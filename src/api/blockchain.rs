@@ -1,13 +1,13 @@
 use crate::{
 	engine::{BitcoinClient, RpcResponse},
-	IBlockchain, ReqBit,
+	IBlockchain, ReqBit, Result,
 };
 use async_trait::async_trait;
 use serde_json::{json, Value};
 
 #[async_trait]
 impl IBlockchain for ReqBit {
-	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Value {
+	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Result<Value> {
 		let client = BitcoinClient::new();
 
 		let mut params = vec![json!(blockhash)];
@@ -15,21 +15,21 @@ impl IBlockchain for ReqBit {
 			params.push(json!(verb));
 		}
 
-		let rpc_response =
-			client.send_request::<RpcResponse>(None, "getblock", params).await.unwrap();
-
-		rpc_response.result
+		match client.send_request::<RpcResponse>(None, "getblock", params).await {
+			Ok(res) => Ok(res.result),
+			Err(err) => Err(err),
+		}
 	}
 
-	async fn getblockhash(&self, height: u32) -> Value {
+	async fn getblockhash(&self, height: u32) -> Result<Value> {
 		let client = BitcoinClient::new();
-
-		let params = vec![json!(height)];
-
-		let rpc_response =
-			client.send_request::<RpcResponse>(None, "getblockhash", params).await.unwrap();
-
-		rpc_response.result
+		match client
+			.send_request::<RpcResponse>(None, "getblockhash", vec![json!(height)])
+			.await
+		{
+			Ok(res) => Ok(res.result),
+			Err(err) => Err(err),
+		}
 	}
 
 	async fn getblockchaininfo(&self) -> Value {

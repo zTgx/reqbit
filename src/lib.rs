@@ -308,7 +308,7 @@ pub trait IBlockchain {
 	/// # Returns
 	///
 	/// Returns a `Value` containing information about the specified block
-	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Value;
+	async fn getblock(&self, blockhash: &str, verbosity: Option<u8>) -> Result<Value>;
 
 	/// Retrieves the hash of a block at a specific height in the blockchain
 	///
@@ -319,7 +319,7 @@ pub trait IBlockchain {
 	/// # Returns
 	///
 	/// Returns a `Value` containing the block hash as a string
-	async fn getblockhash(&self, height: u32) -> Value;
+	async fn getblockhash(&self, height: u32) -> Result<Value>;
 
 	/// Retrieves various state information about blockchain processing
 	///
